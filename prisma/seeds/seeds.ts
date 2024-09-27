@@ -24,17 +24,6 @@ export async function Seeds() {
     };
   });
 
-  const addressCreateManyInput: Prisma.AddressCreateManyInput[] = Array.from({
-    length: records / 1,
-  }).map((_, index) => {
-    return {
-      street: faker.location.streetAddress(),
-      city: faker.location.city(),
-      // userId: userCreateManyInput[index % userCreateManyInput.length].id,
-      userId: userCreateManyInput[Math.floor(index / 10)].id,
-    };
-  });
-
   try {
     console.log('🚀 ~ Seeds Start... ');
 
@@ -46,15 +35,6 @@ export async function Seeds() {
           })
           .catch((error) => {
             console.error('Error creating user', error);
-            throw error;
-          });
-
-        await prisma.address
-          .createMany({
-            data: addressCreateManyInput,
-          })
-          .catch((error) => {
-            console.error('Error creating address', error);
             throw error;
           });
       },

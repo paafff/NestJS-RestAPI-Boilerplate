@@ -34,12 +34,6 @@ export class UserService {
       // },
       select: {
         email: true,
-        address: {
-          select: {
-            street: true,
-            city: true,
-          },
-        },
       },
     });
   }
