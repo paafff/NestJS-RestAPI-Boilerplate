@@ -6,8 +6,13 @@ import { ChatService } from './chat.service';
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
-  @Post('bitcoin-price')
-  async sendBitcoinPrice(@Body('prompt') prompt: string): Promise<string> {
-    return await this.chatService.fetchAndSendBitcoinPrice(prompt);
+  @Post('fetch-coins')
+  async fetchCoinsPrice(@Body('prompt') prompt: string): Promise<string> {
+    return await this.chatService.fetchAndSendCoinsPrice(prompt);
+  }
+
+  @Post('fetch-coin')
+  async fetchCoinPrice(@Body('prompt') prompt: string): Promise<string> {
+    return await this.chatService.fetchAndSendCoinPrice(prompt);
   }
 }

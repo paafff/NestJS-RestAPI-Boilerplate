@@ -9,6 +9,11 @@ let prisma = new PrismaClient();
 export async function Seeds() {
   const records: number = 100;
 
+  // Membaca dan memparsing data dari cryptos.json
+  const cryptosFilePath = join('prisma/seeds/cryptos.json');
+  const cryptosData = await fs.readFile(cryptosFilePath, 'utf-8');
+  const cryptos = JSON.parse(cryptosData);
+
   const userCreateManyInput: Prisma.UserCreateManyInput[] = Array.from({
     length: records / 10,
   }).map((_, index) => {
@@ -24,6 +29,19 @@ export async function Seeds() {
     };
   });
 
+  const cryptoCreateManyInput: Prisma.CryptoCreateManyInput[] = cryptos
+    .filter(
+      (crypto: any) => crypto.id && crypto.name && crypto.symbol && crypto.icon,
+    )
+    .map((crypto: any) => {
+      return {
+        idCrypto: crypto.id,
+        name: crypto.name,
+        symbol: crypto.symbol,
+        icon: crypto.icon,
+      };
+    });
+
   try {
     console.log('🚀 ~ Seeds Start... ');
 
@@ -35,6 +53,15 @@ export async function Seeds() {
           })
           .catch((error) => {
             console.error('Error creating user', error);
+            throw error;
+          });
+
+        await prisma.crypto
+          .createMany({
+            data: cryptoCreateManyInput,
+          })
+          .catch((error) => {
+            console.error('Error creating crypto', error);
             throw error;
           });
       },
